@@ -1,0 +1,45 @@
+
+<html>
+	<head>
+		<script type="text/javascript" src="./settings.js"></script>
+		<script type="text/javascript" src="./options.js"></script>
+	</head>
+
+	<body>
+		<div class="" style="">
+			<h1 style="">
+				Settings
+			</h1>
+
+			<div id="">
+				<label for="txtClientId">Client ID</label>
+				<input type="text" id="txtClientId" name="txtClientId" />
+
+				<br/>
+
+				<label for="txtClientSecret">Client Secret</label>
+				<input type="text" id="txtClientSecret" name="txtClientSecret" />
+
+				<br/>
+
+				<label for="txtVenueSlug">Venue Slug</label>
+				<input type="text" id="txtVenueSlug" name="txtVenueSlug" />
+			</div>
+
+			<br/>
+
+			<input type="hidden" id="hdnDebugMode" />
+
+			<div style="display: inline-block; width: 100%; text-align: center; margin-top: 40px;">
+				<button id="btnSave">Save</button>
+				<span style="width: 100px;">&nbsp;</span>
+				<button id="btnReset">Reset to Defaults</button>
+			</div>
+		</div>
+
+		<div style="width: 35em; margin: 0px auto; text-align: center; font-size: 12px; font-style: italic; font-family: 'Helvetica Neue', HelveticaNeue, Helvetica, Arial, sans-serif;">
+			Mappedin for Chrome <br/>
+			Version <span id="lblVersion"></span>
+		</div>
+	</body>
+</html>
