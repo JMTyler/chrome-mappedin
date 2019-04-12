@@ -7,7 +7,9 @@ jmtyler.settings = (function()
 
 	var _defaults = {
 		is_debug_mode : false,
-		api_key       : '[YOU FORGOT TO INPUT YOUR API KEY]',
+		client_id     : '<Your API Key Here>',
+		client_secret : '<Your API Secret Here>',
+		venue_slug    : '<Your venue slug here>',
 	};
 
 	var _commit = function()
@@ -75,7 +77,6 @@ jmtyler.settings = (function()
 	};
 })();
 
-// TODO: Move this to a better spot, but it still must realistically depend on jmtyler.settings
 jmtyler.log = function()
 {
 	if (!jmtyler.settings.get('is_debug_mode')) {

@@ -14,46 +14,53 @@ var mapsSortedByElevation = []
 var div = document.getElementById( 'mapView' )
 var mapExpanded = false
 
-// options for Mappedin.getVenue
-// You will need to customize this with the data provided by Mappedin. Ask your representative if you don't have a key, secret, and slug.
-var venueOptions = {
-	baseUrl: "https://apiv1.mappedin.com/1/",
-	clientId: "<Your API Key Here>",
-	clientSecret: "<Your API Secret Here>",
-	perspective: "Website",
-	things: {
-		venue: ['slug', 'name'],
-		locations: ['name', 'type', 'description', 'icon', 'logo', 'sortOrder'],
-		categories: ['name'],
-		maps: ['name', 'elevation', 'shortName']
-	},
-	venue: "<Your venue slug here>"
-};
+// This is your main function. It talks to the mappedin API and sets everything up for you
+function init() {
 
-// Options for the MapView constructor
-var mapviewOptions = {
-	antialias: "AUTO",
-	mode: Mappedin.modes.TEST,
-	onFirstMapLoaded: function () {
-		console.log("First map fully loaded. No more pop in.");
-	},
-	onDataLoaded: function() {
-		console.log("3D data loaded, map usable. Could hide loading screen here, but things will be popping in. Now you can do things that interact with the 3D scene")
-		onDataLoaded()
-	}
-};
+	jmtyler.settings.init('local', () => {
+		Mappedin.initialize({
+			// Options for the MapView constructor
+			mapview: {
+				antialias: "AUTO",
+				mode: Mappedin.modes.TEST,
+				onFirstMapLoaded: function () {
+					console.log("First map fully loaded. No more pop in.");
+				},
+				onDataLoaded: function() {
+					console.log("3D data loaded, map usable. Could hide loading screen here, but things will be popping in. Now you can do things that interact with the 3D scene")
+					onDataLoaded()
+				}
+			},
+			// options for Mappedin.getVenue
+			// You will need to customize this with the data provided by Mappedin. Ask your representative if you don't have a key, secret, and slug.
+			venue: {
+				baseUrl: "https://apiv1.mappedin.com/1/",
+				clientId: jmtyler.settings.get('client_id'),
+				clientSecret: jmtyler.settings.get('client_secret'),
+				perspective: "Website",
+				things: {
+					venue: ['slug', 'name'],
+					locations: ['name', 'type', 'description', 'icon', 'logo', 'sortOrder'],
+					categories: ['name'],
+					maps: ['name', 'elevation', 'shortName']
+				},
+				venue: jmtyler.settings.get('venue_slug')
+			},
+			// Options for search
+			search: {
+				key: "",
+				secret: ""
+			}
+		}, div).then(function (data) {
+			mapView = data.mapview
+			venue = data.venue
+			search = data.search
+			analytics = data.analytics
 
-// Options for search
-var searchOptions = {
-	key: "",
-	secret: ""
-}
-
-// Combined all of them to use Mappedin.initalize
-var options = {
-	mapview: mapviewOptions,
-	venue: venueOptions,
-	search: searchOptions
+		},function (error) {
+			window.alert("Mappedin " + error)
+		});
+	});
 }
 
 function onPolygonClicked (polygonId) {
@@ -165,20 +172,6 @@ function drawRandomPath() {
 	} else {
 		drawRandomPath()
 	}
-}
-
-// This is your main function. It talks to the mappedin API and sets everything up for you
-function init() {
-
-	Mappedin.initialize(options, div).then(function (data) {
-		mapView = data.mapview
-		venue = data.venue
-		search = data.search
-		analytics = data.analytics
-
-	},function (error) {
-		window.alert("Mappedin " + error)
-	})
 }
 
 function onDataLoaded() {
