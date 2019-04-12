@@ -17,6 +17,7 @@ var mapExpanded = false
 // options for Mappedin.getVenue
 // You will need to customize this with the data provided by Mappedin. Ask your representative if you don't have a key, secret, and slug.
 var venueOptions = {
+	baseUrl: "https://apiv1.mappedin.com/1/",
 	clientId: "<Your API Key Here>",
 	clientSecret: "<Your API Secret Here>",
 	perspective: "Website",
