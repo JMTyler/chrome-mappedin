@@ -6,6 +6,7 @@
 		"default_popup": "popup.html"
 	},
 	"permissions": [
+		"https://d1p5cqqchvbqmy.cloudfront.net/websdk/v1.50.1/mappedin.js",
 		"https://apiv1.mappedin.com/*",
 		"storage"
 	],
