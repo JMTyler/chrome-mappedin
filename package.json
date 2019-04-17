@@ -1,0 +1,40 @@
+{
+  "name": "chrome-mappedin",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "build": "vitreum --static",
+    "dev": "vitreum --static --dev",
+    "postinstall": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "classnames": "^2.2.6",
+    "pico-conf": "^1.5.1",
+    "pico-flux": "stolksdorf/pico-flux#contracts",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "vitreum": "^5.6.2"
+  },
+  "vitreum": {
+    "static": true,
+    "targets": [
+      "client/options/options.smart.jsx",
+      "client/popup/popup.jsx"
+    ],
+    "template": "client/html.template.js",
+    "rootPath": "/build"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread"
+    ]
+  }
+}
