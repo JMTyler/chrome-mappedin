@@ -26,12 +26,12 @@ const ChromeStorage = Flux.Store({
 		return State.loaded;
 	},
 	getOptions() {
+		// I think this is actually bad, as it could cause needless re-renders.
 		return Object.assign({}, State);
 	},
 });
 
 ChromeStorage.emitter.on('update', () => {
-	// TODO: save chrome data async
 	console.log('[updated storage]', State);
 });
 
