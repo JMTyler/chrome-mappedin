@@ -1,3 +1,4 @@
+module.exports = () => {
 var mapView
 var venue
 var search
@@ -261,3 +262,4 @@ function onDataLoaded() {
 // }
 
 mapList.addEventListener("change", changeMap)
+};

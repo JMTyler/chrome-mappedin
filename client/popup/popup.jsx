@@ -5,6 +5,8 @@ if (typeof window !== 'undefined') {
 	require('lib/mappedin-v1.50.1.js');
 }
 
+const renderMappedin = require('lib/popup.js');
+
 const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 	console.log('-- DUMB render');
 
@@ -20,6 +22,8 @@ const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 			<div><pre><code>{clientId}</code></pre></div>
 			<div><pre><code>{clientSecret}</code></pre></div>
 			<div><pre><code>{venueSlug}</code></pre></div>
+
+			<div><button onClick={renderMappedin}>GO</button></div>
 
 			<div id="mapView"></div><select id="mapList"></select>
 		</div>
