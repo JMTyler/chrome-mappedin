@@ -1,5 +1,5 @@
 {
-	"name": "Mappedin Web",
+	"name": "Mappedin for Chrome",
 	"description": "",
 	"version": "0.1.0",
 	"icons": {
@@ -16,5 +16,5 @@
 	],
 	"options_page": "/build/options/index.html",
 	"manifest_version": 2,
-	"content_security_policy": "script-src 'self' 'sha256-CGp9v/U12KWJdst3WqZgJrsryv2jDkS9ZtFFcF19rUQ='"
+	"content_security_policy": "script-src 'self' 'sha256-CGp9v/U12KWJdst3WqZgJrsryv2jDkS9ZtFFcF19rUQ=' 'sha256-jGu+u3U9aiuEhjJKF6df6u5+2N8yPtBqOblRVPsr9yY='"
 }

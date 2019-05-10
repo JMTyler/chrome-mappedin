@@ -24,7 +24,7 @@
     "static": true,
     "targets": [
       "client/options/options.smart.jsx",
-      "client/popup/popup.jsx"
+      "client/popup/popup.smart.jsx"
     ],
     "template": "client/html.template.js",
     "rootPath": "/build"
