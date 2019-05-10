@@ -64,20 +64,33 @@ function init() {
 }
 
 function onPolygonClicked (polygonId) {
+	mapView.removeAllMarkers();
 	mapView.clearAllPolygonColors()
 	mapView.setPolygonColor(polygonId, mapView.colors.select)
 	mapView.focusOnPolygon(polygonId, true)
 	console.log(polygonId + " clicked")
 	var location = locationsByPolygon[polygonId]
 	if (location != null) {
-		console.log(location.name + " was selected.")
+		console.log(location.name + " was selected.", location)
 		analytics.locationSelected(location)
 	}
+	let logo = '';
+	if (location.logo && location.logo.original) logo = location.logo.original;
+	let categoryBlock = '';
+	if (location.categories[0] && venue._categoriesById[location.categories[0]] && venue._categoriesById[location.categories[0]].name) categoryBlock = `<div class='category'>↳<span class='label'>${venue._categoriesById[location.categories[0]].name}</span></div>`;
+	var marker = mapView.createMarker(`<div class='logo-container container'><img class='logo' src='${logo}'/></div><div class='info-container container'><div class='location'><span class='label'>${location.name}</span></div>${categoryBlock}<div class='button-container container'><button class='directions'>Get Directions</button></div></div>`, mapView.getPositionPolygon(polygonId), 'marker');
+	console.log('marker', marker);
+	document.querySelector('.marker .button-container .directions').onclick = () => {
+		mapView.removeAllMarkers();
+		mapView.drawPath(location.nodes[0].directionsTo());
+	};
 	return false
 }
 
 function onNothingClicked() {
 	console.log("onNothingClicked")
+	// TODO: remove markers if there are any, iff there AREN'T, clear polygon colours
+	mapView.removeAllMarkers();
 	mapView.clearAllPolygonColors()
 }
 
