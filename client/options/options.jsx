@@ -1,12 +1,16 @@
-require('./options.less');
+// require('./options.less');
 const React = require('react');
 
-const OptionsPage = ({ ...props }) => {
-	console.log('rendering DUMB');
+const OptionsPage = ({ ready, appVersion, initialState, onSave }) => {
+	console.log('-- DUMB render');
 
-	const [ state, setState ] = React.useState(props.state);
-	console.log('DUMB state', state);
-	console.log('props', props);
+	console.log('---- DUMB props', { ready, appVersion, initialState, onSave });
+	if (!ready) {
+		return (<div>Loading...</div>);
+	}
+
+	const [ state, setState ] = React.useState(initialState);
+	console.log('---- DUMB state', state);
 
 	const onChange = (field, value) => {
 		// TODO: Do we need to include the whole state here, or just the bit that's changing like before?
@@ -24,7 +28,7 @@ const OptionsPage = ({ ...props }) => {
 					<label>Client ID</label>
 					<input type="text"
 						onChange={(evt) => onChange('clientId', evt.target.value)}
-						value={state.clientId} 
+						value={state.clientId}
 					/>
 
 					<br/>
@@ -32,7 +36,7 @@ const OptionsPage = ({ ...props }) => {
 					<label>Client Secret</label>
 					<input type="text"
 						onChange={(evt) => onChange('clientSecret', evt.target.value)}
-						value={''}
+						value={state.clientSecret}
 					/>
 
 					<br/>
@@ -40,7 +44,7 @@ const OptionsPage = ({ ...props }) => {
 					<label>Venue Slug</label>
 					<input type="text"
 						onChange={(evt) => onChange('venueSlug', evt.target.value)}
-						value={''}
+						value={state.venueSlug}
 					/>
 				</div>
 
@@ -48,17 +52,17 @@ const OptionsPage = ({ ...props }) => {
 
 				<input type="hidden"
 					onChange={(evt) => onChange('isDebugMode', evt.target.value)}
-					value={''}
+					value={state.isDebugMode}
 					/>
 
 				<div>
-					<button onClick={() => props.onSave(state)}>Save</button>
+					<button onClick={() => onSave(state)}>Save</button>
 				</div>
 			</div>
 
 			<div>
 				Mappedin for Chrome <br/>
-				Version <span id="lblVersion">{''}</span>
+				Version <span id="lblVersion">{appVersion}</span>
 			</div>
 		</div>
 	);

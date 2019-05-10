@@ -7,18 +7,21 @@ const SmartOptionsPage = Flux.Component({
 	component : require('./options.jsx'),
 	sources   : [ ChromeStorage ],
 	getProps  : () => {
-		console.log('rendering SMART');
-		const state = ChromeStorage.getOptions();
-		console.log('SMART state', state);
+		console.log('SMART render');
+		const ready = ChromeStorage.isLoaded();
+		const appVersion = typeof chrome !== 'undefined' ? chrome.runtime.getManifest().version : null;
+		const initialState = ChromeStorage.getOptions();
+		console.log('-- SMART state', initialState);
+		delete initialState.loaded;
 
 		const onSave = (state) => {
-			console.log('saving', state);
+			console.log('-- SMART saving', state);
 			ChromeStorage.setOptions(state);
 			return;
-		
+
 			jmtyler.log('saving settings...', { clientId, clientSecret, venueSlug, isDebugMode });
 			return;
-		
+
 			jmtyler.settings.set('client_id', this.state.clientId)
 				.set('client_secret', this.state.clientSecret)
 				.set('venue_slug', this.state.venueSlug)
@@ -27,7 +30,9 @@ const SmartOptionsPage = Flux.Component({
 
 		// Data from Stores & Contracts should be passed by reference to limit needless re-renders.
 		return {
-			state,
+			ready,
+			appVersion,
+			initialState,
 			onSave,
 		};
 	},

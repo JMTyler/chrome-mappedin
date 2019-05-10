@@ -1,6 +1,7 @@
 const Flux = require('pico-flux');
 
 let State = {
+	loaded: false,
 	clientId     : '',
 	clientSecret : '',
 	venueSlug    : '',
@@ -12,27 +13,34 @@ const ChromeStorage = Flux.Store({
 		State = Object.assign({}, State, state);
 	},
 	setOptions(state) {
-		console.log('persisting options', state);
+		console.log('[persisting options]', state);
+		State = Object.assign({}, State, state);
+		chrome.storage.local.set({ settings: State });
 	},
 
 
 
 
 }, {
+	isLoaded() {
+		return State.loaded;
+	},
 	getOptions() {
-		return State;
+		return Object.assign({}, State);
 	},
 });
 
 ChromeStorage.emitter.on('update', () => {
 	// TODO: save chrome data async
+	console.log('[updated storage]', State);
 });
 
 if (typeof chrome !== 'undefined') {
 	// TODO: fetch chrome data async
 	chrome.storage.local.get('settings', (storage) => {
-		console.log('fetched storage', storage)
+		console.log('[fetched storage]', storage)
 		if (storage.settings) {
+			storage.settings.loaded = true;
 			ChromeStorage.init(storage.settings);
 		}
 	});
