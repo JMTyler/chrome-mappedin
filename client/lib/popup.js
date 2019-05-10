@@ -1,4 +1,10 @@
-module.exports = () => {
+module.exports = () => {};
+
+if (typeof window != 'undefined') {
+
+const Mappedin = require('lib/mappedin-v1.50.1.js');
+
+module.exports = (clientId, clientSecret, venue) => {
 var mapView
 var venue
 var search
@@ -18,7 +24,6 @@ var mapExpanded = false
 // This is your main function. It talks to the mappedin API and sets everything up for you
 function init() {
 
-	jmtyler.settings.init('local', () => {
 		Mappedin.initialize({
 			// Options for the MapView constructor
 			mapview: {
@@ -36,8 +41,8 @@ function init() {
 			// You will need to customize this with the data provided by Mappedin. Ask your representative if you don't have a key, secret, and slug.
 			venue: {
 				baseUrl: "https://apiv1.mappedin.com/1/",
-				clientId: jmtyler.settings.get('client_id'),
-				clientSecret: jmtyler.settings.get('client_secret'),
+				clientId: clientId,
+				clientSecret: clientSecret,
 				perspective: "Website",
 				things: {
 					venue: ['slug', 'name'],
@@ -45,7 +50,7 @@ function init() {
 					categories: ['name'],
 					maps: ['name', 'elevation', 'shortName']
 				},
-				venue: jmtyler.settings.get('venue_slug')
+				venue: venue,
 			},
 			// Options for search
 			search: {
@@ -61,7 +66,6 @@ function init() {
 		},function (error) {
 			window.alert("Mappedin " + error)
 		});
-	});
 }
 
 function onPolygonClicked (polygonId) {
@@ -263,3 +267,4 @@ function onDataLoaded() {
 
 mapList.addEventListener("change", changeMap)
 };
+}

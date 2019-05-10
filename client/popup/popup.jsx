@@ -1,10 +1,6 @@
 require('./popup.less');
 const React = require('react');
 
-if (typeof window !== 'undefined') {
-	require('lib/mappedin-v1.50.1.js');
-}
-
 const renderMappedin = require('lib/popup.js');
 
 const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
@@ -23,7 +19,7 @@ const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 			<div><pre><code>{clientSecret}</code></pre></div>
 			<div><pre><code>{venueSlug}</code></pre></div>
 
-			<div><button onClick={renderMappedin}>GO</button></div>
+			<div><button onClick={() => renderMappedin(clientId, clientSecret, venueSlug)}>GO</button></div>
 
 			<div id="mapView"></div><select id="mapList"></select>
 		</div>
