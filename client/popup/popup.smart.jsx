@@ -8,13 +8,13 @@ const SmartPopup = Flux.Component({
 	getProps  : () => {
 		console.log('SMART render');
 		const ready = ChromeStorage.isLoaded();
-		const initialState = ChromeStorage.getOptions();
-		console.log('-- SMART state', initialState);
+		const options = ChromeStorage.getOptions();
+		console.log('-- SMART state', options);
 
 		// Data from Stores & Contracts should be passed by reference to limit needless re-renders.
 		return {
 			ready,
-			initialState,
+			...options,
 		};
 	},
 });

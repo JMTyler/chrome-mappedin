@@ -1,39 +1,27 @@
 require('./popup.less');
 const React = require('react');
 
-const Popup = ({ ready, initialState }) => {
+if (typeof window !== 'undefined') {
+	require('lib/mappedin-v1.50.1.js');
+}
+
+const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 	console.log('-- DUMB render');
 
-	console.log('---- DUMB props', { ready, initialState });
+	console.log('---- DUMB props', { ready, clientId, clientSecret, venueSlug });
 	if (!ready) {
 		return (<div>Loading...</div>);
 	}
-
-	const [ state, setState ] = React.useState(initialState);
-	console.log('---- DUMB state', state);
-
-	const renderTextbox = (field, label) => {
-		return (
-			<div>
-				<label>{label}</label>
-				<input type="text"
-					value={state[field]}
-				/>
-			</div>
-		);
-	};
 
 	return (
 		<div className='Popup'>
 			<h1>Popup</h1>
 
-			<form>
-				<div>
-					{renderTextbox('clientId', 'Client ID')}
-					{renderTextbox('clientSecret', 'Client Secret')}
-					{renderTextbox('venueSlug', 'Venue Slug')}
-				</div>
-			</form>
+			<div><pre><code>{clientId}</code></pre></div>
+			<div><pre><code>{clientSecret}</code></pre></div>
+			<div><pre><code>{venueSlug}</code></pre></div>
+
+			<div id="mapView"></div><select id="mapList"></select>
 		</div>
 	);
 };
