@@ -16,6 +16,11 @@ const OptionsForm = ({ ready, appVersion, initialState, onSave }) => {
 		return setState({ ...state, [field] : value });
 	};
 
+	const onSubmit = (evt) => {
+		evt && evt.preventDefault();
+		return onSave(state);
+	};
+
 	const renderTextbox = (field, label) => {
 		return (
 			<div>
@@ -29,7 +34,7 @@ const OptionsForm = ({ ready, appVersion, initialState, onSave }) => {
 	};
 
 	return (
-		<div>
+		<div className='Options'>
 			<h1>Options</h1>
 
 			<form>
@@ -40,7 +45,7 @@ const OptionsForm = ({ ready, appVersion, initialState, onSave }) => {
 				</div>
 
 				<div>
-					<button onClick={() => onSave(state)}>Save</button>
+					<button onClick={onSubmit}>Save</button>
 				</div>
 			</form>
 

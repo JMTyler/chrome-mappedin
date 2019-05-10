@@ -1,33 +1,31 @@
 const Flux = require('pico-flux');
 
-let State = {
+const State = {
 	loaded: false,
-	clientId     : '',
-	clientSecret : '',
-	venueSlug    : '',
-	isDebugMode  : false,
+	options: {
+		isDebugMode  : false,
+		clientId     : '<Your API Key Here>',
+		clientSecret : '<Your API Secret Here>',
+		venueSlug    : '<Your venue slug here>',
+	},
 };
 
 const ChromeStorage = Flux.Store({
 	init(state){
-		State = Object.assign({}, State, state);
+		Object.assign(State, state);
 	},
-	setOptions(state) {
-		console.log('[persisting options]', state);
-		State = Object.assign({}, State, state);
-		chrome.storage.local.set({ settings: State });
+	setOptions(options) {
+		console.log('[persisting options]', options);
+		Object.assign(State.options, options);
+		chrome.storage.local.set({ settings: options });
 	},
-
-
-
-
 }, {
 	isLoaded() {
 		return State.loaded;
 	},
 	getOptions() {
 		// I think this is actually bad, as it could cause needless re-renders.
-		return Object.assign({}, State);
+		return State.options;
 	},
 });
 
@@ -36,13 +34,14 @@ ChromeStorage.emitter.on('update', () => {
 });
 
 if (typeof chrome !== 'undefined') {
-	// TODO: fetch chrome data async
+	// TODO: Let's switch to simply using `options` for this.
 	chrome.storage.local.get('settings', (storage) => {
 		console.log('[fetched storage]', storage)
+		const state = { loaded: true };
 		if (storage.settings) {
-			storage.settings.loaded = true;
-			ChromeStorage.init(storage.settings);
+			state.options = storage.settings;
 		}
+		ChromeStorage.init(state);
 	});
 }
 

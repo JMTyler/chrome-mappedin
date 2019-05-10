@@ -12,7 +12,6 @@ const SmartOptionsPage = Flux.Component({
 		const appVersion = typeof chrome !== 'undefined' ? chrome.runtime.getManifest().version : null;
 		const initialState = ChromeStorage.getOptions();
 		console.log('-- SMART state', initialState);
-		delete initialState.loaded;
 
 		const onSave = (state) => {
 			console.log('-- SMART saving', state);
