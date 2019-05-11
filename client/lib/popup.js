@@ -63,7 +63,7 @@ function init() {
 			search = data.search
 			analytics = data.analytics
 
-		},function (error) {
+		}).catch(function (error) {
 			window.alert("Mappedin " + error)
 		});
 }

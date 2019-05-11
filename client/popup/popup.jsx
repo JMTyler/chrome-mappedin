@@ -11,17 +11,12 @@ const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 		return (<div>Loading...</div>);
 	}
 
+	setTimeout(() => renderMappedin(clientId, clientSecret, venueSlug), 5000);
+
 	return (
 		<div className='Popup'>
-			<h1>Popup</h1>
-
-			<div><pre><code>{clientId}</code></pre></div>
-			<div><pre><code>{clientSecret}</code></pre></div>
-			<div><pre><code>{venueSlug}</code></pre></div>
-
-			<div><button onClick={() => renderMappedin(clientId, clientSecret, venueSlug)}>GO</button></div>
-
-			<div id="mapView"></div><select id="mapList"></select>
+			<div id="mapView"></div>
+			<select id="mapList"></select>
 		</div>
 	);
 };
