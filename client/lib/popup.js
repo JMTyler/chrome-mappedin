@@ -1,82 +1,79 @@
 
-module.exports = (clientId, clientSecret, venue) => {
+module.exports = (clientId, clientSecret, venueSlug) => {
 	if (typeof window == 'undefined') return;
 
 	const Mappedin = require('lib/mappedin-v1.50.1.js');
 
-	var mapView
-	var venue
-	var search
-	var analytics
+	let mapView;
+	let venue;
+	let search;
+	let analytics;
 
 	// For the demo animation
-	var polygonedLocations = []
+	const polygonedLocations = [];
 
 	// Track which polygon belongs to which location
-	var locationsByPolygon = {}
+	const locationsByPolygon = {};
 
-	var mapList = document.getElementById("mapList")
-	var mapsSortedByElevation = []
-	var div = document.getElementById( 'mapView' )
-	var mapExpanded = false
+	const mapList = document.getElementById('mapList');
+	let mapsSortedByElevation = [];
 
 	// This is your main function. It talks to the mappedin API and sets everything up for you
 	function init() {
-
 			Mappedin.initialize({
 				// Options for the MapView constructor
 				mapview: {
-					antialias: "AUTO",
+					antialias: 'AUTO',
 					mode: Mappedin.modes.TEST,
-					onFirstMapLoaded: function () {
-						console.log("First map fully loaded. No more pop in.");
+					onFirstMapLoaded() {
+						console.log('First map fully loaded. No more pop in.');
 					},
-					onDataLoaded: function() {
-						console.log("3D data loaded, map usable. Could hide loading screen here, but things will be popping in. Now you can do things that interact with the 3D scene")
-						onDataLoaded()
-					}
+					onDataLoaded() {
+						console.log('3D data loaded, map usable. Could hide loading screen here, but things will be popping in. Now you can do things that interact with the 3D scene');
+						onDataLoaded();
+					},
 				},
 				// options for Mappedin.getVenue
 				// You will need to customize this with the data provided by Mappedin. Ask your representative if you don't have a key, secret, and slug.
 				venue: {
-					baseUrl: "https://apiv1.mappedin.com/1/",
+					baseUrl: 'https://apiv1.mappedin.com/1/',
 					clientId: clientId,
 					clientSecret: clientSecret,
-					perspective: "Website",
+					perspective: 'Website',
 					things: {
 						venue: ['slug', 'name'],
 						locations: ['name', 'type', 'description', 'icon', 'logo', 'sortOrder'],
 						categories: ['name'],
-						maps: ['name', 'elevation', 'shortName']
+						maps: ['name', 'elevation', 'shortName'],
 					},
-					venue: venue,
+					venue: venueSlug,
 				},
 				// Options for search
 				search: {
-					key: "",
-					secret: ""
+					key: '',
+					secret: '',
 				}
-			}, div).then(function (data) {
-				mapView = data.mapview
-				venue = data.venue
-				search = data.search
-				analytics = data.analytics
+			}, document.getElementById('mapView')).then((data) => {
+				mapView = data.mapview;
+				venue = data.venue;
+				search = data.search;
+				analytics = data.analytics;
 
-			}).catch(function (error) {
-				window.alert("Mappedin " + error)
+			}).catch((err) => {
+				window.alert('Mappedin ' + err);
 			});
 	}
 
-	function onPolygonClicked (polygonId) {
+	function onPolygonClicked(polygonId) {
 		mapView.removeAllMarkers();
-		mapView.clearAllPolygonColors()
-		mapView.setPolygonColor(polygonId, mapView.colors.select)
-		mapView.focusOnPolygon(polygonId, true)
-		console.log(polygonId + " clicked")
-		var location = locationsByPolygon[polygonId]
+		mapView.clearAllPolygonColors();
+		mapView.setPolygonColor(polygonId, mapView.colors.select);
+		mapView.focusOnPolygon(polygonId, true);
+		console.log(polygonId + ' clicked');
+		const location = locationsByPolygon[polygonId];
 		if (location != null) {
-			console.log(location.name + " was selected.", location)
-			analytics.locationSelected(location)
+			console.log(location.name + ' was selected.', location);
+			analytics.locationSelected(location);
 		}
 		let logo = '';
 		if (location.logo && location.logo.original) logo = location.logo.original;
@@ -88,181 +85,157 @@ module.exports = (clientId, clientSecret, venue) => {
 			mapView.removeAllMarkers();
 			mapView.drawPath(location.nodes[0].directionsTo());
 		};
-		return false
+		return false;
 	}
 
 	function onNothingClicked() {
-		console.log("onNothingClicked")
+		console.log('onNothingClicked');
 		// TODO: remove markers if there are any, iff there AREN'T, clear polygon colours
 		mapView.removeAllMarkers();
-		mapView.clearAllPolygonColors()
+		mapView.clearAllPolygonColors();
 	}
 
 	// Changes the map and updates the Map List
 	function setMap(map) {
-		mapList.selectedIndex = mapList.namedItem(map).index
-		mapView.setMap(map)
+		mapList.selectedIndex = mapList.namedItem(map).index;
+		mapView.setMap(map);
 	}
 
 	// Changes the map in response to a Map List selection
 	function changeMap() {
-		mapView.setMap(mapList.value, function () {
-			console.log("Map changed to " + mapList.value)
-		})
+		mapView.setMap(mapList.value, () => {
+			console.log('Map changed to ' + mapList.value);
+		});
 	}
 
 	// Convenience function to help us get random array items
 	function getRandomInArray(array) {
-		return array[Math.floor(Math.random() * array.length)]
+		return array[Math.floor(Math.random() * array.length)];
 	}
 
 	// Returns list of maps used in directions, sorted by elevation
 	function getMapsInJourney(directions) {
-		var uniqueMapHash = {}
+		const uniqueMapHash = {};
 		directions.instructions.forEach((direction) => {
-			uniqueMapHash[direction.node.map] = true
-		})
-		var mapIds = new Array();
-		for (var key in uniqueMapHash) {
+			uniqueMapHash[direction.node.map] = true;
+		});
+		const mapIds = [];
+		for (let key in uniqueMapHash) {
 		  mapIds.push(key);
 		}
-		var sortedMapIds = mapsSortedByElevation.filter(map => mapIds.indexOf(map.id) !== -1)
-		return sortedMapIds
+		const sortedMapIds = mapsSortedByElevation.filter((map) => mapIds.indexOf(map.id) !== -1);
+		return sortedMapIds;
 	}
 
 
 	// Draws a random path (single or multi floor), highlighting the locations and focusing on the path and polygons
 	// Draws another random path after 9000 ms
 	function drawRandomPath() {
-		var startLocation = getRandomInArray(polygonedLocations)
-		var startPolygon = getRandomInArray(startLocation.polygons)
-		var startNode = getRandomInArray(startPolygon.entrances)
+		const startLocation = getRandomInArray(polygonedLocations);
+		const startPolygon = getRandomInArray(startLocation.polygons);
+		const startNode = getRandomInArray(startPolygon.entrances);
 
-		var endLocation = getRandomInArray(polygonedLocations)
-		var endPolygon = getRandomInArray(endLocation.polygons)
-		var endNode = getRandomInArray(endPolygon.entrances)
+		const endLocation = getRandomInArray(polygonedLocations);
+		const endPolygon = getRandomInArray(endLocation.polygons);
+		const endNode = getRandomInArray(endPolygon.entrances);
 
 		//Options for drawing paths
-		var pathOptions = {
+		const pathOptions = {
 			drawConnectionSegigments: true,
 			connectionPathOptions: {
-				color: mapView.colors.path
-			}
+				color: mapView.colors.path,
+			},
 		};
 
-		var expandOptions = {
+		const expandOptions = {
 			focus: true,
 			rotation: 0,
-			duration: 600
+			duration: 600,
 		};
 
 		// Some polygons don't have entrance nodes, need to check before getting directions
 		if (startNode != null && endNode != null) {
-			startNode.directionsTo(endNode, { accessible: false, directionsProvider: "offline" }, function(error, directions) {
+			startNode.directionsTo(endNode, { accessible: false, directionsProvider: 'offline' }, (error, directions) => {
 				if (error || directions.path.length == 0) {
-					drawRandomPath()
-					return
+					drawRandomPath();
+					return;
 				}
 
-				mapView.clearAllPolygonColors()
+				mapView.clearAllPolygonColors();
 				if (mapView.navigator.overviewVisible === true) {
-					mapView.navigator.hideOverview()
+					mapView.navigator.hideOverview();
 				}
 
-				mapView.setPolygonColor(startPolygon, mapView.colors.path)
-				mapView.setPolygonColor(endPolygon, mapView.colors.select)
+				mapView.setPolygonColor(startPolygon, mapView.colors.path);
+				mapView.setPolygonColor(endPolygon, mapView.colors.select);
 
 				try {
 					mapView.navigator.setScale(1);
-					mapView.navigator.showOverview(directions, {pathOptions, expandOptions})
-						.catch(e => console.error(e))
+					mapView.navigator.showOverview(directions, { pathOptions, expandOptions })
+						.catch(console.error);
 				} catch (e) {
-					console.error(e)
+					console.error(e);
 				}
 
 			new Promise((resolve) => setTimeout(resolve, 9000))
 				.then(() => {
-					drawRandomPath()
+					drawRandomPath();
 				})
-				.catch(e => {console.log(e)})
+				.catch(console.error);
 			})
 		} else {
-			drawRandomPath()
+			drawRandomPath();
 		}
 	}
 
 	function onDataLoaded() {
-
-		mapView.onPolygonClicked = onPolygonClicked
-		mapView.onNothingClicked = onNothingClicked
-		var locations = venue.locations;
-		for (var j = 0, jLen = locations.length; j < jLen; ++j) {
-			var location = locations[j];
+		mapView.onPolygonClicked = onPolygonClicked;
+		mapView.onNothingClicked = onNothingClicked;
+		const locations = venue.locations;
+		for (let j = 0, jLen = locations.length; j < jLen; ++j) {
+			const location = locations[j];
 
 			if (location.polygons.length > 0) {
-				polygonedLocations.push(location)
+				polygonedLocations.push(location);
 			}
 
-			var locationPolygons = location.polygons;
-			for (var k = 0, kLen = locationPolygons.length; k < kLen; ++k) {
-				var polygon = locationPolygons[k];
-				mapView.addInteractivePolygon(polygon)
+			const locationPolygons = location.polygons;
+			for (let k = 0, kLen = locationPolygons.length; k < kLen; ++k) {
+				const polygon = locationPolygons[k];
+				mapView.addInteractivePolygon(polygon);
 
 				// A polygon may be attached to more than one location. If that is the case for your venue,
 				// you will need some way of determinng which is the "primary" location when it's clicked on.
-				var oldLocation = locationsByPolygon[polygon.id]
+				const oldLocation = locationsByPolygon[polygon.id];
 				if (oldLocation == null || oldLocation.sortOrder > location.sortOrder) {
-					locationsByPolygon[polygon.id] = location
+					locationsByPolygon[polygon.id] = location;
 				}
 			}
 		}
-		var maps = venue.maps;
-		for (var m = 0, mLen = maps.length; m < mLen; ++m) {
-			var map = maps[m];
-			var mapId = map.id;
-			var item = document.createElement("option")
-			item.text = map.shortName
-			item.value = map.id
-			item.id = map.id
+		const maps = venue.maps;
+		for (let m = 0, mLen = maps.length; m < mLen; ++m) {
+			const map = maps[m];
+			const mapId = map.id;
+			const item = document.createElement('option');
+			item.text = map.shortName;
+			item.value = map.id;
+			item.id = map.id;
 			if (mapId == mapView.currentMap) {
-				item.selected = true
+				item.selected = true;
 			}
-			mapList.add(item)
+			mapList.add(item);
 		}
 		mapsSortedByElevation = venue.maps.sort((a, b) => b.elevation - a.elevation);
 
 		mapView.labelAllLocations({
-			excludeTypes: [] // If there are certain Location types you don't want to have labels (like amenities), exclude them here)
-		})
+			excludeTypes: [], // If there are certain Location types you don't want to have labels (like amenities), exclude them here)
+		});
 
 		// Shows off the pathing
-		//drawRandomPath()
+		// drawRandomPath();
 	}
 
-	// Start up the mapview
+	init();
 
-	// Uncomment the service worker stuff for an offline fallback. Only works on very modern browsers, but it should fail gracefully.
-	// This uses the Service Workers API, and relies on the fact that the MapView downloads everything it needs ahead of time.
-	// Directions, search, and analytics will not function offline, and any images from the Mappedin platform (logos, etc)
-	// that aren't baked into the map will not be downloaded automatically, you should make sure you do that in init.
-	// This is really for a kiosk type application.
-
-	// if ('serviceWorker' in navigator) {
-	// 	window.addEventListener('load', function() {
-	// 		navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-	// 			// Registration was successful
-	//     	  	console.log('ServiceWorker registration successful with scope: ', registration.scope);
-	//       		init();
-	// 		}).catch(function(err) {
-	// 			// registration failed :(
-	// 			console.log('ServiceWorker registration failed: ', err);
-	// 			init();
-	// 		});
-	// 	})
-	// } else {
-		// Otherwise, just init
-		init();
-	// }
-
-	mapList.addEventListener("change", changeMap)
+	mapList.addEventListener('change', changeMap);
 };
