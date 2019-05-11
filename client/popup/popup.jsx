@@ -11,7 +11,7 @@ const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 		return (<div>Loading...</div>);
 	}
 
-	setTimeout(() => renderMappedin(clientId, clientSecret, venueSlug), 5000);
+	setTimeout(() => renderMappedin(clientId, clientSecret, venueSlug), 250);
 
 	return (
 		<div className='Popup'>
