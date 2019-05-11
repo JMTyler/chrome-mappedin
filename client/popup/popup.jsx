@@ -11,12 +11,19 @@ const Popup = ({ ready, clientId, clientSecret, venueSlug }) => {
 		return (<div>Loading...</div>);
 	}
 
-	setTimeout(() => renderMappedin(clientId, clientSecret, venueSlug), 250);
+	// const [sdk, setSDK] = React.useState(null);
+	const mapView = React.useRef();
+	const mapList = React.useRef();
+	React.useEffect(() => {
+		if (mapView && mapView.current && mapList && mapList.current) {
+			renderMappedin(mapView.current, mapList.current, clientId, clientSecret, venueSlug);
+		}
+	}, [mapView, mapList]);
 
 	return (
 		<div className='Popup'>
-			<div id="mapView"></div>
-			<select id="mapList"></select>
+			<div ref={mapView} className='mapView'></div>
+			<select ref={mapList} className='mapList'></select>
 		</div>
 	);
 };

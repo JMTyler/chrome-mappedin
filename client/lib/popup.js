@@ -1,5 +1,5 @@
 
-module.exports = async (clientId, clientSecret, venueSlug) => {
+module.exports = async (mapViewRef, mapListRef, clientId, clientSecret, venueSlug) => {
 	if (typeof window == 'undefined') return;
 
 	// TODO: Should be able to switch to @mappedin/mappedin-js, yes?
@@ -49,7 +49,7 @@ module.exports = async (clientId, clientSecret, venueSlug) => {
 				}
 
 				const maps = venue.maps;
-				const mapList = document.getElementById('mapList');
+				const mapList = mapListRef;
 				for (let m = 0, mLen = maps.length; m < mLen; ++m) {
 					const map = maps[m];
 					const mapId = map.id;
@@ -190,7 +190,7 @@ module.exports = async (clientId, clientSecret, venueSlug) => {
 	};
 
 	try {
-		const data = await Mappedin.initialize(options, document.getElementById('mapView'));
+		const data = await Mappedin.initialize(options, mapViewRef);
 
 		mapView = data.mapview;
 		venue = data.venue;
