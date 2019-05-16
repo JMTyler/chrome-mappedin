@@ -1,19 +1,20 @@
 {
-	"name": "Mappedin Web",
+	"name": "Mappedin for Chrome",
 	"description": "",
 	"version": "0.1.0",
 	"icons": {
-		"16": "icons/16.png",
-		"48": "icons/48.png"
+		"16": "backup/icons/16.png",
+		"48": "backup/icons/48.png"
 	},
 	"web_accessible_resources": ["icons/48.png"],
 	"browser_action": {
-		"default_popup": "popup.html"
+		"default_popup": "/build/popup/index.html"
 	},
 	"permissions": [
 		"https://apiv1.mappedin.com/*",
 		"storage"
 	],
-	"options_page": "options.html",
-	"manifest_version": 2
+	"options_page": "/build/options/index.html",
+	"manifest_version": 2,
+	"content_security_policy": "script-src 'self' 'sha256-CGp9v/U12KWJdst3WqZgJrsryv2jDkS9ZtFFcF19rUQ=' 'sha256-jGu+u3U9aiuEhjJKF6df6u5+2N8yPtBqOblRVPsr9yY='"
 }
